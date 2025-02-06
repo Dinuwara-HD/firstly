@@ -9,22 +9,74 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _selectedCategory = '';
-  String _hoveredCategory = '';
+  String _selectedCategory = 'Recommended';
   int _selectedIndex = 0;
 
-  void _navigateTo(BuildContext context, String title) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => DetailPage(title: title)),
-    );
-  }
+  final Map<String, List<Map<String, dynamic>>> _categoryContent = {
+    'Recommended': [
+      {
+        'title': 'Access our library',
+        'subtitle': 'From conflict to harmony',
+        'color': Colors.greenAccent,
+        'icon': Icons.menu_book,
+      },
+      {
+        'title': 'Want to talk to someone?',
+        'subtitle': 'Discover the art of stillness',
+        'color': Colors.orangeAccent,
+        'icon': Icons.support_agent,
+      },
+      {
+        'title': 'Let It Go',
+        'subtitle': 'Release your worries and relax',
+        'color': Colors.blueGrey,
+        'icon': Icons.cloud,
+      },
+    ],
+    'Breathe': [
+      {
+        'title': 'Deep Breathing',
+        'subtitle': 'Improve your focus',
+        'color': Colors.blueAccent,
+        'icon': Icons.air,
+      },
+      {
+        'title': 'Breath Control',
+        'subtitle': 'Calm your mind',
+        'color': Colors.cyan,
+        'icon': Icons.self_improvement,
+      },
+    ],
+    'Calm': [
+      {
+        'title': 'Stay Calm',
+        'subtitle': 'Find inner peace',
+        'color': Colors.purpleAccent,
+        'icon': Icons.nightlight_round,
+      },
+    ],
+    'Music': [
+      {
+        'title': 'Relaxing Sounds',
+        'subtitle': 'Feel the tranquility',
+        'color': Colors.deepOrange,
+        'icon': Icons.music_note,
+      },
+    ],
+    'Community': [
+      {
+        'title': 'Join Discussions',
+        'subtitle': 'Engage with others',
+        'color': Colors.teal,
+        'icon': Icons.forum,
+      },
+    ],
+  };
 
   void _onCategoryTap(String category) {
     setState(() {
       _selectedCategory = category;
     });
-    _navigateTo(context, category);
   }
 
   void _onNavTap(int index) {
@@ -33,16 +85,25 @@ class _HomePageState extends State<HomePage> {
     });
 
     if (index == 0) {
-      // Navigate to Meditation Page
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MeditationPage()),
       );
     } else {
-      // Keep other navigation as is
       List<String> pages = ['Sleep', 'Progress'];
       _navigateTo(context, pages[index - 1]);
     }
+  }
+
+  void _navigateTo(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Scaffold(
+                appBar: AppBar(title: Text(title)),
+                body: Center(child: Text('Content for $title')),
+              )),
+    );
   }
 
   @override
@@ -92,41 +153,21 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
-            _buildCard(
-              context,
-              title: 'Let it go',
-              subtitle: "Don't Judge Yourself",
-              duration: '32 min',
-              tracks: '8 tracks',
-              readTime: '2 min read',
-              color: Colors.lightBlueAccent,
-              image: Icons.self_improvement,
-            ),
-            const SizedBox(height: 20),
-            const Text('How are you feeling today?'),
-            const SizedBox(height: 10),
             _buildCategoryChips(),
             const SizedBox(height: 20),
-            _buildCard(
-              context,
-              title: 'Access our library',
-              subtitle: 'From conflict to harmony',
-              duration: '10 min',
-              tracks: '4 tracks',
-              readTime: '1 min read',
-              color: Colors.greenAccent,
-              image: Icons.menu_book,
-            ),
-            const SizedBox(height: 20),
-            _buildCard(
-              context,
-              title: 'Want to talk to someone?',
-              subtitle: 'Discover the art of stillness',
-              duration: '14 min',
-              tracks: '6 tracks',
-              readTime: '3 min read',
-              color: Colors.orangeAccent,
-              image: Icons.support_agent,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Column(
+                key: ValueKey<String>(_selectedCategory),
+                children: _categoryContent[_selectedCategory]!
+                    .map((data) => _buildCard(
+                          title: data['title'],
+                          subtitle: data['subtitle'],
+                          color: data['color'],
+                          image: data['icon'],
+                        ))
+                    .toList(),
+              ),
             ),
           ],
         ),
@@ -153,13 +194,31 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCard(
-    BuildContext context, {
+  Widget _buildCategoryChips() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: _categoryContent.keys.map((category) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ChoiceChip(
+              label: Text(category),
+              selected: _selectedCategory == category,
+              onSelected: (bool selected) {
+                if (selected) {
+                  _onCategoryTap(category);
+                }
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildCard({
     required String title,
     required String subtitle,
-    required String duration,
-    required String tracks,
-    required String readTime,
     required Color color,
     required IconData image,
   }) {
@@ -171,6 +230,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.only(bottom: 16),
         child: Row(
           children: [
             Icon(image, size: 60, color: Colors.white),
@@ -195,52 +255,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryChips() {
-    final categories = ['Recommended', 'Breathe', 'Calm', 'Music'];
-    return Wrap(
-      spacing: 8.0,
-      children: categories.map((category) {
-        bool isSelected = _selectedCategory == category;
-        bool isHovered = _hoveredCategory == category;
-        return MouseRegion(
-          onEnter: (_) => setState(() => _hoveredCategory = category),
-          onExit: (_) => setState(() => _hoveredCategory = ''),
-          child: GestureDetector(
-            onTap: () => _onCategoryTap(category),
-            child: Chip(
-              label: Text(category),
-              backgroundColor: isSelected
-                  ? Colors.black
-                  : isHovered
-                      ? Colors.blueGrey
-                      : Colors.grey.shade300,
-              labelStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isSelected || isHovered ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class DetailPage extends StatelessWidget {
-  final String title;
-  const DetailPage({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Text('Welcome to $title page!', style: TextStyle(fontSize: 24)),
       ),
     );
   }
