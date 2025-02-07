@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'meditation_page.dart';
+import 'library_page.dart';
+import 'music_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -96,14 +98,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _navigateTo(BuildContext context, String title) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
+    if (title == 'Access our library') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LibraryPage()),
+      );
+    } else if (title == 'Relaxing Sounds') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MusicPage()),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
           builder: (context) => Scaffold(
-                appBar: AppBar(title: Text(title)),
-                body: Center(child: Text('Content for $title')),
-              )),
-    );
+            appBar: AppBar(title: Text(title)),
+            body: Center(child: Text('Content for $title')),
+          ),
+        ),
+      );
+    }
   }
 
   @override
