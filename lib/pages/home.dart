@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'meditation_page.dart';
 import 'library_page.dart';
 import 'music_page.dart';
+import 'chat_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -100,14 +101,15 @@ class _HomePageState extends State<HomePage> {
   void _navigateTo(BuildContext context, String title) {
     if (title == 'Access our library') {
       Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LibraryPage()),
-      );
+          context, MaterialPageRoute(builder: (context) => LibraryPage()));
     } else if (title == 'Relaxing Sounds') {
       Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MusicPage()),
-      );
+          context, MaterialPageRoute(builder: (context) => MusicPage()));
+    } else if (title == 'Want to talk to someone?') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatScreen())); // ✅ Navigate to ChatScreen
     } else {
       Navigator.push(
         context,
