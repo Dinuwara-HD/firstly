@@ -1,8 +1,12 @@
+import 'package:firstly/pages/sleep_page.dart';
 import 'package:flutter/material.dart';
 import 'meditation_page.dart';
 import 'library_page.dart';
 import 'music_page.dart';
 import 'chat_screen.dart';
+import 'appointments_page.dart';
+import 'let_it_go_page.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +38,12 @@ class _HomePageState extends State<HomePage> {
         'subtitle': 'Release your worries and relax',
         'color': Colors.blueGrey,
         'icon': Icons.cloud,
+      },
+      {
+        'title': 'Book an Appointment',
+        'subtitle': 'Consult a professional',
+        'color': Colors.pinkAccent,
+        'icon': Icons.calendar_today,
       },
     ],
     'Breathe': [
@@ -82,22 +92,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onNavTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MeditationPage()),
-      );
-    } else {
-      List<String> pages = ['Sleep', 'Progress'];
-      _navigateTo(context, pages[index - 1]);
-    }
-  }
-
   void _navigateTo(BuildContext context, String title) {
     if (title == 'Access our library') {
       Navigator.push(
@@ -107,9 +101,13 @@ class _HomePageState extends State<HomePage> {
           context, MaterialPageRoute(builder: (context) => MusicPage()));
     } else if (title == 'Want to talk to someone?') {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ChatScreen())); // ✅ Navigate to ChatScreen
+          context, MaterialPageRoute(builder: (context) => ChatScreen()));
+    } else if (title == 'Book an Appointment') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AppointmentsPage()));
+    } else if (title == 'Let It Go') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LetItGoPage()));
     } else {
       Navigator.push(
         context,
@@ -123,28 +121,32 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (_selectedIndex) {
+      case 0:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MeditationPage()));
+        break;
+      case 1:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SleepPage()));
+        break;
+      case 2:
+        // Do nothing (Keep Progress tab but disable navigation)
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () => _navigateTo(context, 'Menu'),
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.menu, color: Colors.black),
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () => _navigateTo(context, 'Profile'),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.account_circle, color: Colors.black),
-            ),
-          ),
-        ],
         title: const Text(
           'Vibes Nest',
           style: TextStyle(
@@ -154,6 +156,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle, color: Colors.black),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -163,11 +176,6 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'Good Morning, User',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Top meditation program for you',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             _buildCategoryChips(),
@@ -191,11 +199,10 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black,
-        onTap: _onNavTap,
-        items: const [
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.spa),
+            icon: Icon(Icons.self_improvement),
             label: 'Meditation',
           ),
           BottomNavigationBarItem(
@@ -203,7 +210,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Sleep',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
+            icon: Icon(Icons.assessment),
             label: 'Progress',
           ),
         ],

@@ -6,34 +6,32 @@ class LibraryPage extends StatelessWidget {
     {
       'title': 'Little Blue Book of Sunshine',
       'description': 'A guide to mental well-being for young people.',
-      'image':
-          'https://cypf.berkshirehealthcare.nhs.uk/media/168458/little-blue-book-of-sunshine.jpg',
       'url':
           'https://cypf.berkshirehealthcare.nhs.uk/media/168458/little-blue-book-of-sunshine.pdf'
     },
     {
       'title': 'Youth Mental Handbook',
       'description': 'A comprehensive mental health resource for young people.',
-      'image':
-          'https://i-lib.imu.edu.my/pluginfile.php/3109/mod_resource/content/2/Youth%20Mental%20Handbook.jpg',
       'url':
           'https://i-lib.imu.edu.my/pluginfile.php/3109/mod_resource/content/2/Youth%20Mental%20Handbook.pdf'
     },
     {
       'title': 'The Practices of Happiness',
       'description': 'A book on the science and philosophy of happiness.',
-      'image':
-          'https://reader.bookfusion.com/books/138653-the-practices-of-happiness.jpg',
       'url':
           'https://reader.bookfusion.com/books/138653-the-practices-of-happiness?type=pdf'
     },
     {
       'title': 'Mental Health Guidebook',
       'description': 'A global mental health guidebook for primary care.',
-      'image':
-          'https://www.globalfamilydoctor.com/site/DefaultSite/filesystem/documents/resources/MHGuidebook-EBookDownload.jpg',
       'url':
           'https://www.globalfamilydoctor.com/site/DefaultSite/filesystem/documents/resources/MHGuidebook-EBookDownload.pdf'
+    },
+    {
+      'title': 'Community Mental Health Care',
+      'description': 'A book on community-based mental health care.',
+      'url':
+          'https://www.google.lk/books/edition/Community_Mental_Health_Care/2sa2LUCEOgYC?hl=en&gbpv=1&dq=mental+health+care&printsec=frontcover'
     }
   ];
 
@@ -64,47 +62,23 @@ class LibraryPage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 16),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(16)),
-                      child: FadeInImage.assetNetwork(
-                        placeholder: 'assets/placeholder.jpg',
-                        image: books[index]['image']!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        imageErrorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            'assets/placeholder.jpg',
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          );
-                        },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        books[index]['title']!,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            books[index]['title']!,
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            books[index]['description']!,
-                            style: const TextStyle(color: Colors.black54),
-                          ),
-                        ],
+                      const SizedBox(height: 8),
+                      Text(
+                        books[index]['description']!,
+                        style: const TextStyle(color: Colors.black54),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
